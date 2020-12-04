@@ -160,9 +160,7 @@ class _LandingPageState extends State<LandingPage> {
                             await context
                                 .read<UserCubit>()
                                 .configureUser(name: nickname);
-                            await context
-                                .read<ChannelCubit>()
-                                .configureChannel(url);
+                            context.read<ChannelCubit>().configureChannel(url);
                             Navigator.of(context).pushReplacement(
                               PlayerPage.route(url),
                             );
