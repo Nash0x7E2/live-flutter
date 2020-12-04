@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hfs/backend/stream_backend.dart';
+import 'package:hfs/bloc/user_cubit/stream_cubit.dart';
 import 'package:hfs/pages/landing_page.dart';
 import 'package:hfs/pages/video_player_page.dart';
-import 'package:hfs/providers/backend_provider.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
@@ -13,8 +14,8 @@ void main() {
 class HLSPOC extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BackendProvider(
-      backend: StreamBackEnd(),
+    return BlocProvider(
+      create: (context) => UserCubit(backEnd: StreamBackEnd()),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: LandingPage(),
@@ -67,39 +68,73 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: const Color(0xff4d7bfe),
       ),
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverPadding(
-              padding: const EdgeInsets.only(top: 24.0),
-            ),
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 200.0,
-                child: PageView(
-                  controller: pageController,
-                  children: [
-                    FeaturedStreamCard(
-                      onTap: () => Navigator.of(context).push(
-                        PlayerPage.route(""),
-                      ),
-                    ),
-                    FeaturedStreamCard(
-                      onTap: () => Navigator.of(context).push(
-                        PlayerPage.route(""),
-                      ),
-                    ),
-                    FeaturedStreamCard(
-                      onTap: () => Navigator.of(context).push(
-                        PlayerPage.route(""),
-                      ),
-                    ),
-                  ],
+        child: BlocBuilder<UserCubit, CubitStreamState>(
+          builder: (context, state) {
+            if (state is StreamUserState && state.hasData) {
+              return _HomePageContent(
+                pageController: pageController,
+              );
+            } else if (state is StreamUserState && state.isLoading) {
+              return Center(
+                child: SizedBox(
+                  height: 100.0,
+                  width: 100.0,
+                  child: CircularProgressIndicator(),
                 ),
-              ),
-            )
-          ],
+              );
+            } else if (state is StreamUserState && state.hasError) {
+              return Center(
+                child: Text("We are having some problems loading videos :("),
+              );
+            } else {
+              return SizedBox();
+            }
+          },
         ),
       ),
+    );
+  }
+}
+
+class _HomePageContent extends StatelessWidget {
+  const _HomePageContent({Key key, @required this.pageController})
+      : assert(pageController != null),
+        super(key: key);
+  final PageController pageController;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.only(top: 24.0),
+        ),
+        SliverToBoxAdapter(
+          child: SizedBox(
+            height: 200.0,
+            child: PageView(
+              controller: pageController,
+              children: [
+                FeaturedStreamCard(
+                  onTap: () => Navigator.of(context).push(
+                    PlayerPage.route(""),
+                  ),
+                ),
+                FeaturedStreamCard(
+                  onTap: () => Navigator.of(context).push(
+                    PlayerPage.route(""),
+                  ),
+                ),
+                FeaturedStreamCard(
+                  onTap: () => Navigator.of(context).push(
+                    PlayerPage.route(""),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        )
+      ],
     );
   }
 }

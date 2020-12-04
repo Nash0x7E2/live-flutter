@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hfs/bloc/user_cubit/stream_cubit.dart';
 import 'package:hfs/main.dart';
 import 'package:hfs/pages/video_player_page.dart';
 
@@ -123,9 +125,11 @@ class _LandingPageState extends State<LandingPage> {
                         ),
                         onPressed: () {
                           if (formKey.currentState.validate()) {
-                            Navigator.of(context).pushReplacement(
-                              HomePage.route(),
-                            );
+                            context
+                                .read<UserCubit>()
+                                .configureUser(name: nickName);
+                            Navigator.of(context)
+                                .pushReplacement(HomePage.route());
                           }
                           return;
                         },
