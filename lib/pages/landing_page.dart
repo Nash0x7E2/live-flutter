@@ -22,8 +22,10 @@ class _LandingPageState extends State<LandingPage> {
   @override
   void initState() {
     super.initState();
-    //TODO(Nash): Remove debug placeholders 
-    urlEditingController = TextEditingController(text: "https://stream.mux.com/YjS00rorMikb7ZdXD9RZw02DJSy3VLRmTJFZsekemji00Y.m3u8");
+    //TODO(Nash): Remove debug placeholders
+    urlEditingController = TextEditingController(
+        text:
+            "https://stream.mux.com/YjS00rorMikb7ZdXD9RZw02DJSy3VLRmTJFZsekemji00Y.m3u8");
     nameEditingController = TextEditingController(text: "nash");
     formKey = GlobalKey<FormState>();
   }
@@ -125,9 +127,9 @@ class _LandingPageState extends State<LandingPage> {
                             (states) => const Color(0xff4d7bfe),
                           ),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           if (formKey.currentState.validate()) {
-                            context
+                            await context
                                 .read<UserCubit>()
                                 .configureUser(name: nickname);
                             Navigator.of(context)
@@ -153,9 +155,14 @@ class _LandingPageState extends State<LandingPage> {
                             (states) => const Color(0xff4d7bfe),
                           ),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           if (formKey.currentState.validate()) {
-                            context.read<ChannelCubit>().configureChannel(url);
+                            await context
+                                .read<UserCubit>()
+                                .configureUser(name: nickname);
+                            await context
+                                .read<ChannelCubit>()
+                                .configureChannel(url);
                             Navigator.of(context).pushReplacement(
                               PlayerPage.route(url),
                             );
