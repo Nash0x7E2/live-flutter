@@ -10,7 +10,7 @@ class StreamBackEnd {
   StreamBackEnd()
       : client = Client(
           'd5xak7ubhw6s',
-          logLevel: Level.INFO,
+          logLevel: Level.SEVERE,
         );
 
   final Client client;
