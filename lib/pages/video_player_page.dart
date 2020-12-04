@@ -58,12 +58,9 @@ class _PlayerPageState extends State<PlayerPage> {
               child: BlocBuilder<ChannelCubit, CubitChannelState>(
                 builder: (BuildContext context, state) {
                   if (state is DataChannelState && state.channel != null) {
-                    return StreamChat(
-                      client: state.channel.client,
-                      child: StreamChannel(
-                        channel: state.channel,
-                        child: ChannelPage(),
-                      ),
+                    return StreamChannel(
+                      channel: state.channel,
+                      child: ChannelPage(),
                     );
                   } else if (state is DataChannelState && state.isLoading) {
                     return Center(

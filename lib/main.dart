@@ -6,6 +6,7 @@ import 'package:hfs/bloc/channel_cubit/cubit/channel_cubit.dart';
 import 'package:hfs/bloc/user_cubit/stream_cubit.dart';
 import 'package:hfs/pages/landing_page.dart';
 import 'package:hfs/pages/video_player_page.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
@@ -25,9 +26,12 @@ class HLSPOC extends StatelessWidget {
           create: (context) => ChannelCubit(backend: backend),
         ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: LandingPage(),
+      child: StreamChat(
+        client: backend.client,
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: LandingPage(),
+        ),
       ),
     );
   }
