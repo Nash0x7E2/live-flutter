@@ -20,12 +20,13 @@ abstract class CubitChannelState extends Equatable {
 
 class ChannelInitial extends CubitChannelState {}
 
-class StreamChannelState extends CubitChannelState {
-  StreamChannelState({
-    @required bool isLoading,
-    @required bool hasError,
-    @required Exception error,
-    @required this.channel,
+class DataChannelState extends CubitChannelState {
+  DataChannelState({
+    bool isLoading = false,
+    bool hasError = false,
+    this.channel,
+    this.client,
+    Exception error,
   }) : super(
           isLoading: isLoading,
           hasError: hasError,
@@ -33,6 +34,7 @@ class StreamChannelState extends CubitChannelState {
         );
 
   final Channel channel;
+  final Client client;
 
   @override
   List<Object> get props => [...super.props, channel];
