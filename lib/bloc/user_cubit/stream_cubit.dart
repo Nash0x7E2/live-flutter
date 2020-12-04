@@ -28,6 +28,4 @@ class UserCubit extends Cubit<CubitStreamState> {
       emit(StreamUserState(hasError: true, error: exception));
     }
   }
-
-
 }
