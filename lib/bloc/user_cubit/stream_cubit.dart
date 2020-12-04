@@ -6,18 +6,18 @@ import 'package:meta/meta.dart';
 part 'stream_state.dart';
 
 class UserCubit extends Cubit<CubitStreamState> {
-  UserCubit({@required this.backEnd})
-      : assert(backEnd != null),
+  UserCubit({@required this.backend})
+      : assert(backend != null),
         super(StreamInitial());
 
-  final StreamBackEnd backEnd;
+  final StreamBackEnd backend;
 
   Future<void> configureUser({@required final String name}) async {
     assert(name != null && name.isNotEmpty);
     try {
       emit(StreamUserState(isLoading: true));
       // TODO(Nash): Call API to dynamically generate a token and id for the user.
-      await backEnd.configureUser(
+      await backend.configureUser(
         name: name,
         id: "nash",
         token:
