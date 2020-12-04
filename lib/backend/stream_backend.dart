@@ -1,5 +1,7 @@
 import 'dart:developer' show log;
+import 'dart:convert';
 
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
@@ -37,16 +39,21 @@ class StreamBackEnd {
     }
   }
 
-  Future<void> configureChannel({@required final String id}) async {
+  Future<Channel> configureChannel({@required final String url}) async {
+    final id = _generateMd5(url);
     try {
-      final channel = client.channel('messaging', id: id);
+      final channel = client.channel('livestream', id: id);
       channel.watch();
-      return;
+      return channel;
     } catch (exception) {
       log(exception.toString());
       throw Exception(
         "Stream SDK cannot create channel for ID $id",
       );
     }
+  }
+
+  String _generateMd5(String input) {
+    return md5.convert(utf8.encode(input)).toString();
   }
 }
