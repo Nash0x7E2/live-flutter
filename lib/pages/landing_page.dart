@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hfs/bloc/channel_cubit/cubit/channel_cubit.dart';
 import 'package:hfs/bloc/user_cubit/stream_cubit.dart';
 import 'package:hfs/main.dart';
 import 'package:hfs/pages/video_player_page.dart';
@@ -153,6 +154,7 @@ class _LandingPageState extends State<LandingPage> {
                         ),
                         onPressed: () {
                           if (formKey.currentState.validate()) {
+                            context.read<ChannelCubit>().configureChannel(url);
                             Navigator.of(context).pushReplacement(
                               PlayerPage.route(url),
                             );

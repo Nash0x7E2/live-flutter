@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hfs/providers/backend_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hfs/bloc/channel_cubit/cubit/channel_cubit.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:yoyo_player/yoyo_player.dart';
 
@@ -54,19 +55,30 @@ class _PlayerPageState extends State<PlayerPage> {
             ),
             Expanded(
               flex: 4,
-              child: FutureBuilder(
-                future: BackendProvider.of(context).configureChannel(),
-                builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
+              child: BlocBuilder<ChannelCubit, CubitChannelState>(
+                builder: (BuildContext context, state) {
+                  if (state is DataChannelState && state.channel != null) {
                     return StreamChat(
-                      client: BackendProvider.of(context).client,
+                      client: state.channel.client,
                       child: StreamChannel(
-                        channel: BackendProvider.of(context).channel,
+                        channel: state.channel,
                         child: ChannelPage(),
                       ),
                     );
+                  } else if (state is DataChannelState && state.isLoading) {
+                    return Center(
+                      child: SizedBox(
+                        height: 100.0,
+                        width: 100.0,
+                        child: const CircularProgressIndicator(),
+                      ),
+                    );
+                  } else if (state is DataChannelState && state.hasError) {
+                    return Center(
+                      child: Text("Oh no, we can't load comments right now :/"),
+                    );
                   } else {
-                    return Container();
+                    return const SizedBox();
                   }
                 },
               ),
