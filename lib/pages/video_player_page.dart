@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hfs/bloc/channel_cubit/cubit/channel_cubit.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:yoyo_player/yoyo_player.dart';
@@ -38,7 +39,7 @@ class _PlayerPageState extends State<PlayerPage> {
         ),
         title: Text(
           "Video",
-          style: TextStyle(color: Colors.black),
+          style: GoogleFonts.inter(color: Colors.black),
         ),
       ),
       body: SafeArea(

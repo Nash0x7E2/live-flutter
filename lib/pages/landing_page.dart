@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hfs/bloc/channel_cubit/cubit/channel_cubit.dart';
 import 'package:hfs/bloc/user_cubit/stream_cubit.dart';
-import 'package:hfs/main.dart';
+import 'package:hfs/pages/home_page.dart';
 import 'package:hfs/pages/video_player_page.dart';
 
 class LandingPage extends StatefulWidget {
@@ -23,9 +23,7 @@ class _LandingPageState extends State<LandingPage> {
   void initState() {
     super.initState();
     //TODO(Nash): Remove debug placeholders
-    urlEditingController = TextEditingController(
-        text:
-            "https://stream.mux.com/YjS00rorMikb7ZdXD9RZw02DJSy3VLRmTJFZsekemji00Y.m3u8");
+    urlEditingController = TextEditingController();
     nameEditingController = TextEditingController(text: "nash");
     formKey = GlobalKey<FormState>();
   }

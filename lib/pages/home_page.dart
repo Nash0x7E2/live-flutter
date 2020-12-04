@@ -67,8 +67,10 @@ class _HomePageState extends State<HomePage> {
 }
 
 class _HomePageContent extends StatelessWidget {
-  const _HomePageContent({Key key, @required this.pageController})
-      : assert(pageController != null),
+  const _HomePageContent({
+    Key key,
+    @required this.pageController,
+  })  : assert(pageController != null),
         super(key: key);
   final PageController pageController;
 
@@ -79,7 +81,7 @@ class _HomePageContent extends StatelessWidget {
         CupertinoSliverNavigationBar(
           largeTitle: Text(
             "Live Flutter",
-            style: TextStyle(
+            style: GoogleFonts.inter(
               color: Colors.black,
               fontWeight: FontWeight.w700,
             ),
@@ -92,14 +94,16 @@ class _HomePageContent extends StatelessWidget {
               controller: pageController,
               children: List.generate(
                 3,
-                (_) => FeaturedStreamCard(
-                  onTap: () {
-                    context.read<ChannelCubit>().configureChannel("");
-                    Navigator.of(context).push(
-                      PlayerPage.route(""),
-                    );
-                  },
-                ),
+                (_) {
+                  return FeaturedStreamCard(
+                    onTap: () {
+                      context.read<ChannelCubit>().configureChannel("");
+                      Navigator.of(context).push(
+                        PlayerPage.route(""),
+                      );
+                    },
+                  );
+                },
               ),
             ),
           ),

@@ -16,7 +16,7 @@ dependencies:
   bloc: 6.1.0
   equatable: 1.2.5
   flutter_bloc: 6.1.1
-
+  google_fonts: 1.1.1
 dependency_overrides:
   video_player: 0.11.1+2
 
