@@ -123,23 +123,17 @@ class _HomePageContent extends StatelessWidget {
             height: 200.0,
             child: PageView(
               controller: pageController,
-              children: [
-                FeaturedStreamCard(
-                  onTap: () => Navigator.of(context).push(
-                    PlayerPage.route(""),
-                  ),
+              children: List.generate(
+                3,
+                (_) => FeaturedStreamCard(
+                  onTap: () {
+                    context.read<ChannelCubit>().configureChannel("");
+                    Navigator.of(context).push(
+                      PlayerPage.route(""),
+                    );
+                  },
                 ),
-                FeaturedStreamCard(
-                  onTap: () => Navigator.of(context).push(
-                    PlayerPage.route(""),
-                  ),
-                ),
-                FeaturedStreamCard(
-                  onTap: () => Navigator.of(context).push(
-                    PlayerPage.route(""),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         )
