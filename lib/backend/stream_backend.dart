@@ -1,17 +1,17 @@
 import 'dart:developer' show log;
 
+import 'package:flutter/material.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
+@immutable
 class StreamBackEnd {
-  StreamBackEnd() {
-    client = Client(
-      'd5xak7ubhw6s',
-      logLevel: Level.INFO,
-    );
-  }
+  StreamBackEnd()
+      : client = Client(
+          'd5xak7ubhw6s',
+          logLevel: Level.INFO,
+        );
 
-  Client client;
-  Channel channel;
+  final Client client;
 
   Future<void> configureUser({
     @required String name,
