@@ -15,7 +15,7 @@ class _LandingPageState extends State<LandingPage> {
   TextEditingController nameEditingController;
   GlobalKey<FormState> formKey;
 
-  String get nickName => nameEditingController.value.text;
+  String get nickname => nameEditingController.value.text;
 
   String get url => urlEditingController.value.text;
 
@@ -128,7 +128,7 @@ class _LandingPageState extends State<LandingPage> {
                           if (formKey.currentState.validate()) {
                             context
                                 .read<UserCubit>()
-                                .configureUser(name: nickName);
+                                .configureUser(name: nickname);
                             Navigator.of(context)
                                 .pushReplacement(HomePage.route());
                           }
