@@ -37,14 +37,16 @@ class StreamBackEnd {
     }
   }
 
-  Future<bool> configureChannel() async {
+  Future<void> configureChannel({@required final String id}) async {
     try {
-      channel = client.channel('messaging', id: 'godevs');
+      final channel = client.channel('messaging', id: id);
       channel.watch();
-      return true;
-    } catch (e) {
-      log(e.toString());
-      return false;
+      return;
+    } catch (exception) {
+      log(exception.toString());
+      throw Exception(
+        "Stream SDK cannot create channel for ID $id",
+      );
     }
   }
 }
