@@ -3,13 +3,14 @@ import 'dart:developer' show log;
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+import 'package:hfs/config.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 @immutable
 class StreamBackEnd {
   StreamBackEnd()
       : client = Client(
-          'd5xak7ubhw6s',
+          EnvironmentConfig.streamAPIKey,
           logLevel: Level.SEVERE,
         );
 
