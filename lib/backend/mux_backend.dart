@@ -1,4 +1,4 @@
-import 'dart:convert' show base64;
+import 'dart:convert' show base64, jsonDecode;
 import 'dart:developer' show log;
 
 import 'package:flutter/cupertino.dart';
@@ -35,8 +35,17 @@ class MuxBackend {
   }
 
   Future<List<Video>> fetchLivestreams() async {
-    try {} catch (error) {
-      log(error.toString());
+    try {
+      final token = baseEncodeToken(muxApiKey, muxSecret);
+      final http.Response response = await http.get(
+        "https://api.mux.com/video/v1/live-streams",
+        headers: {"Authorization": "Basic $token"},
+      );
+      final data = jsonDecode(response.body)['data'] as List<dynamic>;
+      return data.map((item) => Video.fromMap(item)).toList(growable: false);
+    } catch (error) {
+      log("fetchLivestreams: ${error.toString()}");
+      throw Exception("Live streams are currently unavailable");
     }
   }
 
