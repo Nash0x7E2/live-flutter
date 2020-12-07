@@ -26,9 +26,11 @@ class MuxBackend {
         "https://api.mux.com/video/v1/assets",
         headers: {"Authorization": "Basic $token"},
       );
-      log(response.body);
+      final data = jsonDecode(response.body)['data'] as List<dynamic>;
+      return data.map((item) => Video.fromMap(item)).toList(growable: false);
     } catch (error) {
-      log(error.toString());
+      log("fetchPastLivestreams: ${error.toString()}");
+      throw Exception("Past livestream recordings are currently unavailable");
     }
   }
 
