@@ -17,7 +17,6 @@ class MuxBackend {
   final http.Client client;
   final String muxApiKey;
   final String muxSecret;
-  final baseUrl = "https://stream.mux.com/";
 
   Future<List<Video>> fetchPastLivestreams() async {
     try {
