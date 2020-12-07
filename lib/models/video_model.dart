@@ -20,6 +20,12 @@ class Video {
     );
   }
 
+  @override
+  String toString() {
+    return 'Video{playbackUrl: $playbackUrl, playbackId: $playbackId, '
+        'assetId: $assetId, duration: $duration, createdAt: $createdAt}';
+  }
+
   final String playbackUrl;
   final String playbackId;
   final String assetId;
