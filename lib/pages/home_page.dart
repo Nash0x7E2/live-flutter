@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hfs/bloc/archived_videos_cubit/archived_videos_cubit.dart';
 import 'package:hfs/bloc/channel_cubit/channel_cubit.dart';
 import 'package:hfs/bloc/user_cubit/stream_cubit.dart';
 import 'package:hfs/pages/video_player_page.dart';
@@ -123,25 +124,54 @@ class _HomePageContent extends StatelessWidget {
         ),
         SliverPadding(
           padding: const EdgeInsets.only(top: 20.0, left: 12.0, right: 12.0),
-          sliver: SliverGrid(
-            delegate: SliverChildListDelegate(
-              List.generate(
-                8,
-                (_) => FeaturedStreamCard(
-                  onTap: () {
-                    context.read<ChannelCubit>().configureChannel("");
-                    Navigator.of(context).push(
-                      PlayerPage.route(""),
-                    );
-                  },
-                ),
-              ),
-            ),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 1.0,
-              crossAxisSpacing: 12.0,
-            ),
+          sliver: BlocBuilder<ArchivedVideosCubit, ArchivedVideosState>(
+            builder: (BuildContext context, ArchivedVideosState state) {
+              if (state is DataArchivedVideosState &&
+                  !state.isLoading &&
+                  state.videoCount > 1) {
+                return SliverGrid(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final item = state.videos[index];
+                      return FeaturedStreamCard(
+                        thumbnailUrl: item.thumbnailUrl,
+                        onTap: () {
+                          context
+                              .read<ChannelCubit>()
+                              .configureChannel(item.playbackUrl);
+                          Navigator.of(context).push(
+                            PlayerPage.route(item.playbackUrl),
+                          );
+                        },
+                      );
+                    },
+                    childCount: state.videoCount,
+                  ),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 1.7,
+                    crossAxisSpacing: 12.0,
+                  ),
+                );
+              } else if (state is DataArchivedVideosState && state.hasError) {
+                return SliverToBoxAdapter(
+                  child: Center(
+                    child:
+                        Text("Oops, we are having some problem connecting :/"),
+                  ),
+                );
+              } else {
+                return SliverToBoxAdapter(
+                  child: Center(
+                    child: SizedBox(
+                      height: 100.0,
+                      width: 100.0,
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                );
+              }
+            },
           ),
         ),
       ],
