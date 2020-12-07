@@ -49,7 +49,7 @@ class _PlayerPageState extends State<PlayerPage> {
               flex: 3,
               child: YoYoPlayer(
                 aspectRatio: 16 / 9,
-                url: url,
+                url: widget.streamUrl ?? url,
                 videoStyle: VideoStyle(),
                 videoLoadingStyle: VideoLoadingStyle(),
               ),
