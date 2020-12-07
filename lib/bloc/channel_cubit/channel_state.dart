@@ -6,6 +6,7 @@ abstract class CubitChannelState extends Equatable {
     @required this.hasError,
     @required this.error,
   });
+
   final bool isLoading;
   final bool hasError;
   final Exception error;
