@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hfs/backend/backend.dart';
+import 'package:hfs/bloc/archived_videos_cubit/archived_videos_cubit.dart';
 import 'package:hfs/bloc/channel_cubit/channel_cubit.dart';
 import 'package:hfs/bloc/user_cubit/stream_cubit.dart';
 import 'package:hfs/pages/landing_page.dart';
@@ -33,6 +34,11 @@ class HLSPOC extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => ChannelCubit(backend: backend.streamBackEnd),
+        ),
+        BlocProvider(
+          create: (context) => ArchivedVideosCubit(
+            muxBackend: backend.muxBackend,
+          )..getArchivedVideos(),
         ),
       ],
       child: StreamChat(
