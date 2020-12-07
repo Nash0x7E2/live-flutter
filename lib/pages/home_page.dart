@@ -153,8 +153,10 @@ class FeaturedStreamCard extends StatelessWidget {
   const FeaturedStreamCard({
     Key key,
     @required this.onTap,
+    this.thumbnailUrl,
   }) : super(key: key);
   final VoidCallback onTap;
+  final String thumbnailUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -165,8 +167,8 @@ class FeaturedStreamCard extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           child: Image.network(
-            "https://source.unsplash.com/random/1600×900",
-            fit: BoxFit.fill,
+            thumbnailUrl ?? "https://source.unsplash.com/random/1600×900",
+            fit: BoxFit.cover,
           ),
         ),
       ),
