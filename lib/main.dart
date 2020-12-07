@@ -1,32 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hfs/backend/stream_backend.dart';
+import 'package:hfs/backend/backend.dart';
 import 'package:hfs/bloc/channel_cubit/cubit/channel_cubit.dart';
 import 'package:hfs/bloc/user_cubit/stream_cubit.dart';
 import 'package:hfs/pages/landing_page.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  final Backend backend = Backend.init();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-  runApp(HLSPOC());
+
+  runApp(HLSPOC(backend: backend));
 }
 
 class HLSPOC extends StatelessWidget {
+  const HLSPOC({
+    Key key,
+    @required this.backend,
+  })  : assert(backend != null),
+        super(key: key);
+
+  final Backend backend;
+
   @override
   Widget build(BuildContext context) {
-    final backend = StreamBackEnd();
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => UserCubit(backend: backend),
+          create: (context) => UserCubit(backend: backend.streamBackEnd),
         ),
         BlocProvider(
-          create: (context) => ChannelCubit(backend: backend),
+          create: (context) => ChannelCubit(backend: backend.streamBackEnd),
         ),
       ],
       child: StreamChat(
-        client: backend.client,
+        client: backend.streamBackEnd.client,
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           home: LandingPage(),
