@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hfs/backend/backend.dart';
-import 'package:hfs/bloc/channel_cubit/cubit/channel_cubit.dart';
+import 'package:hfs/bloc/channel_cubit/channel_cubit.dart';
 import 'package:hfs/bloc/user_cubit/stream_cubit.dart';
 import 'package:hfs/pages/landing_page.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
