@@ -3,20 +3,43 @@ import 'dart:developer' show log;
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 @immutable
 class StreamBackEnd {
-  StreamBackEnd({@required this.client}) : assert(client != null);
+  StreamBackEnd({
+    @required this.client,
+    @required this.httpClient,
+  }) : assert(client != null);
 
   final Client client;
+  final http.Client httpClient;
+
+  Future<String> getUserToken({@required String name}) async {
+    assert(name != null);
+    try {
+      final http.Response response = await httpClient.post(
+        "https://stream-token-api-elkxvkzduq-ue.a.run.app/token",
+        body: {
+          "name": name,
+        },
+      );
+      return jsonDecode(response.body)['token'];
+    } catch (error) {
+      log("getUserToken: ${error.toString()}");
+      throw Exception(
+        "Stream SDK unable to generate token for $name",
+      );
+    }
+  }
 
   Future<void> configureUser({
     @required String name,
     @required String id,
-    @required String token,
   }) async {
     try {
+      final token = await getUserToken(name: name);
       await client.setUser(
         User(
           id: name,
@@ -30,7 +53,7 @@ class StreamBackEnd {
     } catch (exception) {
       log(exception.toString());
       throw Exception(
-        "Stream SDK cannot set user with ID $id and token $token",
+        "Stream SDK cannot set user with ID $id",
       );
     }
   }

@@ -16,13 +16,12 @@ class UserCubit extends Cubit<CubitStreamState> {
     assert(name != null && name.isNotEmpty);
     try {
       emit(StreamUserState(isLoading: true));
-      // TODO(Nash): Call API to dynamically generate a token and id for the user.
+
       await backend.configureUser(
         name: name,
-        id: "nash",
-        token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoibmFzaCJ9.9mJyRhgRAINMTKHEue-ZqYHlJ6M2EtWLcsWYkVHuSOc",
+        id: name,
       );
+
       emit(StreamUserState(hasData: true));
     } catch (exception) {
       emit(StreamUserState(hasError: true, error: exception));

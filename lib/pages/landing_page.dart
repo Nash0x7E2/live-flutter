@@ -22,9 +22,8 @@ class _LandingPageState extends State<LandingPage> {
   @override
   void initState() {
     super.initState();
-    //TODO(Nash): Remove debug placeholders
     urlEditingController = TextEditingController();
-    nameEditingController = TextEditingController(text: "nash");
+    nameEditingController = TextEditingController();
     formKey = GlobalKey<FormState>();
   }
 

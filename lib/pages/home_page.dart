@@ -4,7 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hfs/bloc/archived_videos_cubit/archived_videos_cubit.dart';
 import 'package:hfs/bloc/channel_cubit/channel_cubit.dart';
+import 'package:hfs/bloc/livevideos_cubit/livestream_cubit.dart';
 import 'package:hfs/bloc/user_cubit/stream_cubit.dart';
+import 'package:hfs/models/video_model.dart';
 import 'package:hfs/pages/video_player_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -75,85 +77,71 @@ class _HomePageContent extends StatelessWidget {
         super(key: key);
   final PageController pageController;
 
+  void onFeatureCardPressed(BuildContext context, Video item) {
+    context.read<ChannelCubit>().configureChannel(item.playbackUrl);
+    Navigator.of(context).push(
+      PlayerPage.route(item.playbackUrl),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        CupertinoSliverNavigationBar(
-          largeTitle: Text(
-            "Live Flutter",
-            style: GoogleFonts.inter(
-              color: Colors.black,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
-        SliverToBoxAdapter(
-          child: SizedBox(
-            height: 200.0,
-            child: PageView(
-              controller: pageController,
-              children: List.generate(
-                3,
-                (_) {
-                  return FeaturedStreamCard(
-                    onTap: () {
-                      context.read<ChannelCubit>().configureChannel("");
-                      Navigator.of(context).push(
-                        PlayerPage.route(""),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.only(left: 24.0, top: 42.0),
-          sliver: SliverToBoxAdapter(
-            child: Text(
-              "Browse",
+    return RefreshIndicator(
+      onRefresh: () async {
+        context.read<LivestreamCubit>().loadStreams();
+        context.read<ArchivedVideosCubit>().getArchivedVideos();
+      },
+      child: CustomScrollView(
+        slivers: [
+          CupertinoSliverNavigationBar(
+            largeTitle: Text(
+              "Live Flutter",
               style: GoogleFonts.inter(
                 color: Colors.black,
-                fontSize: 32.0,
                 fontWeight: FontWeight.w700,
               ),
             ),
           ),
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.only(top: 20.0, left: 12.0, right: 12.0),
-          sliver: BlocBuilder<ArchivedVideosCubit, ArchivedVideosState>(
-            builder: (BuildContext context, ArchivedVideosState state) {
-              if (state is DataArchivedVideosState &&
+          BlocBuilder<LivestreamCubit, LivestreamState>(
+            builder: (BuildContext context, LivestreamState state) {
+              final hasData = state is DataLiveStreamState &&
                   !state.isLoading &&
-                  state.videoCount > 1) {
-                return SliverGrid(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final item = state.videos[index];
-                      return FeaturedStreamCard(
-                        thumbnailUrl: item.thumbnailUrl,
-                        onTap: () {
-                          context
-                              .read<ChannelCubit>()
-                              .configureChannel(item.playbackUrl);
-                          Navigator.of(context).push(
-                            PlayerPage.route(item.playbackUrl),
-                          );
-                        },
-                      );
-                    },
-                    childCount: state.videoCount,
-                  ),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 1.7,
-                    crossAxisSpacing: 12.0,
+                  state.videos.isNotEmpty;
+              final noVideos = state is DataLiveStreamState &&
+                  !state.isLoading &&
+                  state.videoCount == 0;
+
+              if (hasData && state is DataLiveStreamState) {
+                return SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 200.0,
+                    child: PageView.builder(
+                      controller: pageController,
+                      itemCount: state.videoCount,
+                      itemBuilder: (BuildContext context, int index) {
+                        final item = state.videos[index];
+                        return FeaturedStreamCard(
+                          thumbnailUrl: item.thumbnailUrl,
+                          onTap: () => onFeatureCardPressed(context, item),
+                        );
+                      },
+                    ),
                   ),
                 );
-              } else if (state is DataArchivedVideosState && state.hasError) {
+              } else if (noVideos && state is DataLiveStreamState) {
+                return SliverToBoxAdapter(
+                  child: const SizedBox(
+                    height: 200.0,
+                    child: Center(
+                      child: Icon(
+                        Icons.hourglass_empty,
+                        size: 100,
+                        color: Color(0xFF0047ff),
+                      ),
+                    ),
+                  ),
+                );
+              } else if (state is DataLiveStreamState && state.hasError) {
                 return SliverToBoxAdapter(
                   child: Center(
                     child:
@@ -163,18 +151,80 @@ class _HomePageContent extends StatelessWidget {
               } else {
                 return SliverToBoxAdapter(
                   child: Center(
-                    child: SizedBox(
-                      height: 100.0,
-                      width: 100.0,
-                      child: CircularProgressIndicator(),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: SizedBox(
+                        height: 25.0,
+                        width: 25.0,
+                        child: CircularProgressIndicator(),
+                      ),
                     ),
                   ),
                 );
               }
             },
           ),
-        ),
-      ],
+          SliverPadding(
+            padding: const EdgeInsets.only(left: 24.0, top: 42.0),
+            sliver: SliverToBoxAdapter(
+              child: Text(
+                "Browse",
+                style: GoogleFonts.inter(
+                  color: Colors.black,
+                  fontSize: 32.0,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(top: 20.0, left: 12.0, right: 12.0),
+            sliver: BlocBuilder<ArchivedVideosCubit, ArchivedVideosState>(
+              builder: (BuildContext context, ArchivedVideosState state) {
+                final hasData = state is DataArchivedVideosState &&
+                    !state.isLoading &&
+                    state.videoCount > 1;
+                if (hasData && state is DataArchivedVideosState) {
+                  return SliverGrid(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final item = state.videos[index];
+                        return FeaturedStreamCard(
+                          thumbnailUrl: item.thumbnailUrl,
+                          onTap: () => onFeatureCardPressed(context, item),
+                        );
+                      },
+                      childCount: state.videoCount,
+                    ),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 1.7,
+                      crossAxisSpacing: 12.0,
+                    ),
+                  );
+                } else if (state is DataArchivedVideosState && state.hasError) {
+                  return SliverToBoxAdapter(
+                    child: Center(
+                      child: Text(
+                          "Oops, we are having some problem connecting :/"),
+                    ),
+                  );
+                } else {
+                  return SliverToBoxAdapter(
+                    child: Center(
+                      child: SizedBox(
+                        height: 100.0,
+                        width: 100.0,
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -197,7 +247,10 @@ class FeaturedStreamCard extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           child: Image.network(
-            thumbnailUrl ?? "https://source.unsplash.com/random/1600×900",
+            thumbnailUrl,
+            errorBuilder: (context, _, __){
+              return Image.asset("assets/logo.png");
+            },
             fit: BoxFit.cover,
           ),
         ),

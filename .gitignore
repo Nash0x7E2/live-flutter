@@ -47,3 +47,5 @@ app.*.map.json
 /mux_demo.sketch
 /.fvm
 /pubspec.lock
+detective_connect.txt
+.vscode/**

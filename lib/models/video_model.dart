@@ -15,7 +15,9 @@ class Video {
     return Video._(
       playbackId: playback,
       assetId: map['id'] as String,
-      duration: Duration(seconds: (map['duration'] as double).toInt()),
+      duration: map['duration'] != null
+          ? Duration(seconds: (map['duration'] as double).toInt())
+          : null,
       createdAt: DateTime.parse(map['created_at']),
       playbackUrl: "https://stream.mux.com/$playback.m3u8",
       thumbnailUrl:

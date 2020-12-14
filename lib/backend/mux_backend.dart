@@ -41,7 +41,10 @@ class MuxBackend {
         headers: {"Authorization": "Basic $token"},
       );
       final data = jsonDecode(response.body)['data'] as List<dynamic>;
-      return data.map((item) => Video.fromMap(item)).toList(growable: false);
+      return data
+          .where((data) => data["status"] == "active")
+          .map((item) => Video.fromMap(item))
+          .toList(growable: false);
     } catch (error) {
       log("fetchLivestreams: ${error.toString()}");
       throw Exception("Live streams are currently unavailable");
