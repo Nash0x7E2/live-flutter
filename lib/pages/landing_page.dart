@@ -34,6 +34,24 @@ class _LandingPageState extends State<LandingPage> {
     nameEditingController.dispose();
   }
 
+  Future<void> onContinueToHomePressed() async {
+    if (formKey.currentState.validate()) {
+      await context.read<UserCubit>().configureUser(name: nickname);
+      Navigator.of(context).pushReplacement(HomePage.route());
+    }
+    return;
+  }
+
+  Future<void> onCustomUrlGoPressed() async {
+    if (formKey.currentState.validate()) {
+      await context.read<UserCubit>().configureUser(name: nickname);
+      context.read<ChannelCubit>().configureChannel(url);
+      Navigator.of(context).pushReplacement(
+        PlayerPage.route(url),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,16 +142,7 @@ class _LandingPageState extends State<LandingPage> {
                             (states) => const Color(0xff4d7bfe),
                           ),
                         ),
-                        onPressed: () async {
-                          if (formKey.currentState.validate()) {
-                            await context
-                                .read<UserCubit>()
-                                .configureUser(name: nickname);
-                            Navigator.of(context)
-                                .pushReplacement(HomePage.route());
-                          }
-                          return;
-                        },
+                        onPressed: onContinueToHomePressed,
                         child: Text("Continue to home"),
                       ),
                     );
@@ -152,17 +161,7 @@ class _LandingPageState extends State<LandingPage> {
                             (states) => const Color(0xff4d7bfe),
                           ),
                         ),
-                        onPressed: () async {
-                          if (formKey.currentState.validate()) {
-                            await context
-                                .read<UserCubit>()
-                                .configureUser(name: nickname);
-                            context.read<ChannelCubit>().configureChannel(url);
-                            Navigator.of(context).pushReplacement(
-                              PlayerPage.route(url),
-                            );
-                          }
-                        },
+                        onPressed: onCustomUrlGoPressed,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Icon(
