@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hfs/bloc/channel_cubit/channel_cubit.dart';
@@ -28,6 +29,12 @@ class PlayerPage extends StatefulWidget {
 class _PlayerPageState extends State<PlayerPage> {
   final url =
       "https://stream.mux.com/YjS00rorMikb7ZdXD9RZw02DJSy3VLRmTJFZsekemji00Y.m3u8";
+
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+  }
 
   @override
   Widget build(BuildContext context) {
