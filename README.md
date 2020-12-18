@@ -1,18 +1,23 @@
-# Live FLutter 
-This repo contains code for my upcoming article on adding live streaming to a Flutter application. 
+# Live Flutter 
 
-### Building 
-To run this project, you will need to obtain an API key for [Mux](https://www.mux.com) and Stream.io. These services allows us to integrate video and chat into our application.
+This repo contains code for my [tutorial](@TODO) on adding live streaming video with [Mux](https://mux.com/) and [Stream Chat](https://getstream.io/chat/) to a Flutter application. 
+
+## Building 
+
+To run this project, you will need to obtain an API key for [Mux](https://mux.com/) and [Stream Chat](https://getstream.io/chat/). These services allows us to integrate video and chat into our application.
 
 When building this application, you must pass the following dart define variables as arguments:
+
 ```
 --dart-define=stream-api=YOUR-KEY,
 --dart-define=mux-secret=YOUR-KEY,
 --dart-define=mux-api=YOUR-KEY
 ```
 
-### Project Structure
+## Project Structure
+
 The project is broken up into three layers:
+
     - UI/Pages
     - Blocs/Cubits
     - Backend Services
