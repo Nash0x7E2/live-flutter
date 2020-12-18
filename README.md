@@ -1,16 +1,20 @@
-# hfs
+# Live FLutter 
+This repo contains code for my upcoming article on adding live streaming to a Flutter application. 
 
-A new Flutter project.
+### Building 
+To run this project, you will need to obtain an API key for [Mux](https://www.mux.com) and Stream.io. These services allows us to integrate video and chat into our application.
 
-## Getting Started
+When building this application, you must pass the following dart define variables as arguments:
+```
+--dart-define=stream-api=YOUR-KEY,
+--dart-define=mux-secret=YOUR-KEY,
+--dart-define=mux-api=YOUR-KEY
+```
 
-This project is a starting point for a Flutter application.
+### Project Structure
+The project is broken up into three layers:
+    - UI/Pages
+    - Blocs/Cubits
+    - Backend Services
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+All UI code can be found in the `pages` folder while networking and api code are contained to the `backend/` directory. Domain models and blocs are stored in `lib/models` and `lib/bloc` respectively. 
