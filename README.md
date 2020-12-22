@@ -1,6 +1,6 @@
 # Live Flutter 
 
-This repo contains code for my [tutorial](@TODO) on adding live streaming video with [Mux](https://mux.com/) and [Stream Chat](https://getstream.io/chat/) to a Flutter application. 
+This repo contains code for my [tutorial](https://getstream.io/blog/live-streaming-with-mux-stream-and-flutter/) on adding live streaming video with [Mux](https://mux.com/) and [Stream Chat](https://getstream.io/chat/) to a Flutter application. 
 
 ## Building 
 
