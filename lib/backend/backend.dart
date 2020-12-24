@@ -16,8 +16,7 @@ class Backend {
   });
 
   static Backend init() {
-    final String muxApiKey = EnvironmentConfig.muxAPIKey;
-    final String muxAPISecret = EnvironmentConfig.muxAPISecret;
+    final String muxApiKey = EnvironmentConfig.muxApi;
     final String streamApiKey = EnvironmentConfig.streamAPIKey;
 
     final httpClient = http.Client();
@@ -31,8 +30,7 @@ class Backend {
     );
     final mux = MuxBackend(
       client: httpClient,
-      muxApiKey: muxApiKey,
-      muxSecret: muxAPISecret,
+      muxApi: muxApiKey,
     );
 
     return Backend._(

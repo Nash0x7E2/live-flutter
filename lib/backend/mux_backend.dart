@@ -1,4 +1,4 @@
-import 'dart:convert' show base64, jsonDecode;
+import 'dart:convert' show jsonDecode;
 import 'dart:developer' show log;
 
 import 'package:flutter/cupertino.dart';
@@ -10,22 +10,18 @@ import 'package:meta/meta.dart';
 class MuxBackend {
   MuxBackend({
     @required this.client,
-    @required this.muxApiKey,
-    @required this.muxSecret,
+    @required this.muxApi,
   }) : assert(client != null);
 
   final http.Client client;
-  final String muxApiKey;
-  final String muxSecret;
+  final String muxApi;
 
   Future<List<Video>> fetchPastLivestreams() async {
     try {
-      final token = baseEncodeToken(muxApiKey, muxSecret);
       final http.Response response = await http.get(
-        "https://api.mux.com/video/v1/assets",
-        headers: {"Authorization": "Basic $token"},
+        "$muxApi/assets",
       );
-      final data = jsonDecode(response.body)['data'] as List<dynamic>;
+      final data = jsonDecode(response.body) as List<dynamic>;
       return data.map((item) => Video.fromMap(item)).toList(growable: false);
     } catch (error) {
       log("fetchPastLivestreams: ${error.toString()}");
@@ -35,12 +31,10 @@ class MuxBackend {
 
   Future<List<Video>> fetchLivestreams() async {
     try {
-      final token = baseEncodeToken(muxApiKey, muxSecret);
       final http.Response response = await http.get(
-        "https://api.mux.com/video/v1/live-streams",
-        headers: {"Authorization": "Basic $token"},
+        "$muxApi/live-streams",
       );
-      final data = jsonDecode(response.body)['data'] as List<dynamic>;
+      final data = jsonDecode(response.body) as List<dynamic>;
       return data
           .where((data) => data["status"] == "active")
           .map((item) => Video.fromMap(item))
@@ -49,9 +43,5 @@ class MuxBackend {
       log("fetchLivestreams: ${error.toString()}");
       throw Exception("Live streams are currently unavailable");
     }
-  }
-
-  String baseEncodeToken(String key, String secret) {
-    return base64.encode("$key:$secret".codeUnits);
   }
 }
